@@ -193,11 +193,8 @@ export default {
             alert("Estás usando un dispositivo móvil!!")
             const dappUrl = window.location.href.split("//")[1].split("/")[0];
             const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
-            let openWin
-            openWin = window.open(metamaskAppDeepLink, "_blank");
-            openWin.close();
+            window.open(metamaskAppDeepLink, "_parent");
             //this.connectWallet()
-             //Window.close();
             alert("Fin del proceso")
         } else {
             console.log("No estás usando un móvil");
