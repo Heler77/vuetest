@@ -55,6 +55,7 @@ export default {
     methods: {
         connectWallet() {
             //let web3Instance
+            alert(window.navigator.vendor)
               const web3 = new Web3(window.ethereum)
               const NODE_URL = 'https://node.philcoin.io/97';
               const INTERFACE = require('../abi.json');
