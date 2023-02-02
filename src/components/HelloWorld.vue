@@ -19,6 +19,13 @@
         <br>
         <span> {{needWallet}} </span>
         <span> BUSD Balance:  {{ BUSDBalance }} </span>
+        <br>
+        <br>
+        <button class="button" @click="connectToConnectWallet" >Connect with ConnectWallet</button>
+        <br>
+        <br>
+        <span> Wallet Connect Address:  {{ walletAddressCW }} </span>
+        <br>
         <!-- <button @click="takeAddress"> Obterner Direccion de Wallet  </button> -->
         <!-- <span> Direccion de la wallet: {{ Address }}     </span> -->
 
@@ -34,6 +41,7 @@
 //import connectWallet from '@/helpers/connectWallet.js'
 
 import Web3 from "web3/dist/web3.min"
+import WalletConnectProvider from "@walletconnect/web3-provider";
 //import Web3 from 'web3' ==>> // Libreria incompatible con versiones de Webpack inferiores a la 5
 
 
@@ -46,7 +54,8 @@ export default {
             walletBalance: "",
             connected: false,
             networkMessage: "",
-            BUSDBalance: 0
+            BUSDBalance: 0,
+            walletAddressCW: ""
             // Address:  variable de la direccion de cartera
             // coneccted = false
         }
@@ -189,21 +198,44 @@ export default {
         },
 
         connectMetamaskMobile() {
-      if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
-            console.log("Estás usando un dispositivo móvil!!");
-            alert("Estás usando un dispositivo móvil!!")
-            const dappUrl = window.location.href.split("//")[1].split("/")[0];
-            const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
-            window.open(metamaskAppDeepLink, "_parent");
-            //this.connectWallet()
-            alert("Fin del proceso")
-        } else {
-            console.log("No estás usando un móvil");
-            alert("No estás usando un móvil")
-        }
-    }
+          if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
+                console.log("Estás usando un dispositivo móvil!!");
+                alert("Estás usando un dispositivo móvil!!")
+                const dappUrl = window.location.href.split("//")[1].split("/")[0];
+                const metamaskAppDeepLink = "https://metamask.app.link/dapp/" + dappUrl;
+                window.open(metamaskAppDeepLink, "_parent");
+                //this.connectWallet()
+                alert("Fin del proceso")
+            } else {
+                console.log("No estás usando un móvil");
+                alert("No estás usando un móvil")
+            }
+        },
 
-    },
+        async connectToConnectWallet() {
+          //  Create WalletConnect Provider
+          const provider = new WalletConnectProvider({
+            infuraId: "27e484dcd9e3efcfd25a83a78777cdf1",
+            rpc: {
+              56: "https://bsc-dataseed.binance.org",
+              97: "https://data-seed-prebsc-1-s1.binance.org:8545"
+            }
+          });
+
+          //  Enable session (triggers QR Code modal)
+          await provider.enable();
+
+          const web3CW = new Web3(provider)
+
+          const accountCW = await web3CW.eth.getAccounts()
+
+          console.log('accountCW', accountCW)
+
+          this.walletAddressCW = accountCW
+
+        }
+
+  },
 
 }
 
